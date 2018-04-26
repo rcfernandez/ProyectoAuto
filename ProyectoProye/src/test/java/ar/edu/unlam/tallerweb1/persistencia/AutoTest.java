@@ -14,8 +14,23 @@ import ar.edu.unlam.tallerweb1.modelo.Auto;
 import ar.edu.unlam.tallerweb1.modelo.Marca;
 import ar.edu.unlam.tallerweb1.modelo.Modelo;
 
+
+/*
+
+TAREA
+------
+1. buscar autos azules.
+2. buscar auto por patente (unico resultado).
+3a. buscar autos de modelo "Clio" por nombre del modelo.
+3b. buscar autos de modelo "Clio" por modelo directamente.
+4. buscar todos los autos de marca "Fiat".
+
+*/
+
 public class AutoTest extends SpringTest {
 
+	
+	// 1. buscar autos azules.
 	@Test
 	@Transactional
 	@Rollback
@@ -41,12 +56,12 @@ public class AutoTest extends SpringTest {
 							.add(Restrictions.eq("color", "Azul"))
 							.list();
 		
-		assertThat(resultado).hasSize(2); 
-		
+		assertThat(resultado).hasSize(2);
 		
 	}
 	
 	
+	// 2. buscar auto por patente (unico resultado).
 	@Test
 	@Transactional
 	@Rollback
@@ -80,6 +95,7 @@ public class AutoTest extends SpringTest {
 	
 	
 	
+	// 3a. buscar autos de modelo "Clio" por nombre del modelo.
 	@Test
 	@Transactional
 	@Rollback
@@ -129,6 +145,7 @@ public class AutoTest extends SpringTest {
 	}
 	
 	
+	// 3b. buscar autos de modelo "Clio" por modelo directamente.
 	@Test
 	@Transactional
 	@Rollback
@@ -170,8 +187,7 @@ public class AutoTest extends SpringTest {
 		
 		
 		List<?> resultado = getSession().createCriteria(Modelo.class)
-				.createAlias("auto","autoBuscado")
-				.add(Restrictions.eq("autoBuscado.nombre", "Clio"))
+				.add(Restrictions.eq("nombre", "Clio"))
 				.list();
 
 		assertThat(resultado).hasSize(2);
@@ -179,6 +195,8 @@ public class AutoTest extends SpringTest {
 	}
 	
 	
+	
+	// 4. buscar todos los autos de marca "Fiat".
 	@Test
 	@Transactional
 	@Rollback
@@ -214,27 +232,27 @@ public class AutoTest extends SpringTest {
 		
 		Modelo modelo1 = new Modelo();
 		modelo1.setNombre("Clio");
-		modelo1.setMarca(marca1);
+		modelo1.setMarca(marca1);	// renault
 		modelo1.setAuto(auto1);
 		getSession().save(modelo1);
 		
 		Modelo modelo2 = new Modelo();
 		modelo2.setNombre("Uno");
-		modelo2.setMarca(marca2);
+		modelo2.setMarca(marca2);	// fiat
 		modelo2.setAuto(auto2);
 		getSession().save(modelo2);
 		
 		Modelo modelo3 = new Modelo();
 		modelo3.setNombre("Sandero");
-		modelo3.setMarca(marca1);
+		modelo3.setMarca(marca1);	// renault
 		modelo3.setAuto(auto3);
 		getSession().save(modelo3);
 		
 
 		List<?> resultado = getSession().createCriteria(Auto.class)
-				.createAlias("modelo", "mo")		// modelo buscado
-				.createAlias("mo.marca", "ma")		// marca buscada
-				.add(Restrictions.eq("ma.nombre", "Fiat"))
+				.createAlias("modelo", "modeloBuscado")		
+				.createAlias("modeloBuscado.marca", "marcaBuscada")		
+				.add(Restrictions.eq("marcaBuscada.nombre", "Fiat"))
 				.list();
 
 		assertThat(resultado).hasSize(1);
@@ -247,4 +265,4 @@ public class AutoTest extends SpringTest {
 	
 	
 
-}
+}	// fin Class AutoTest
